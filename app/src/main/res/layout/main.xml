@@ -1,0 +1,52 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:id="@+id/content"
+    android:gravity="center">
+
+    <TextView
+		android:id="@+id/textView"
+        android:text="@string/hello_world"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" 
+		android:textSize="20dp"
+		android:background="#A26D68"
+		android:layout_gravity="start|top"/>
+
+    <TextView
+        android:id="@+id/scaledTextView"
+        android:text="@string/hello_world"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:background="#A26D68"
+        android:layout_gravity="start|top"/>
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal">
+		
+		<FrameLayout
+			android:layout_width="30dp"
+			android:layout_height="1dp" />
+		
+		<FrameLayout
+			android:id="@+id/mainFrameLayout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_gravity="left|top"
+			>
+			
+			<com.grishberg.textcarddimen.CustomTextView
+				android:id="@+id/cardText"
+       	 		android:text="@string/hello_world"
+        		android:layout_width="@dimen/cardWidth"
+        		android:layout_height="wrap_content" 
+				android:background="#9C0D4FF5"
+				android:layout_gravity="left|top"
+				android:textSize="20dp"/>
+	
+		</FrameLayout>
+	</LinearLayout>
+</FrameLayout>

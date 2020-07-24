@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">TextCardDimensions</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="abc">АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюяABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890~!@#$%^&amp;*()_+{}|"':` &lt;&gt;?,.;-[]\n</string>
+	<string name="sample0">Откуда дровишки ??</string>
+	<string name="sample">Однажды в студеную зимнюю пору я из дому вышел - был сильный мороз. Гляжу поднимается медленно в гору лошадка, везущая хвораста воз. Откуда дровишки? - Из лесу</string>
+	<string name="sample1">ЫyЫyЫыыЫЫyWyWyTyUyEyWy Wy Wy UyQy</string>
+	
+</resources>

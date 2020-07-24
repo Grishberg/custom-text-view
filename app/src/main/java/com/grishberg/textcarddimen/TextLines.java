@@ -78,8 +78,9 @@ public class TextLines {
             currentTop += dimensions.newLineHeight;
             state = multiLine;
             state.init(currentLine, currentWord.toString(), currentWordWidth);
-            state.processSymbol(c);
+            currentLine = new StringBuilder();
             currentLineWidth = 0f;
+            state.processSymbol(c);
             currentLine = new StringBuilder();
         }
 
@@ -103,6 +104,8 @@ public class TextLines {
             this.previousLine = previousLine;
             this.previousWord = lastWord;
             this.previousWordWidth = lastWordWidth;
+            currentWord = new StringBuilder();
+            currentWordWidth = 0f;
         }
 
         @Override
@@ -132,8 +135,12 @@ public class TextLines {
                 // store previous word in previous line
                 previousLine.append(previousWord);
                 currentLine.append(currentWord);
+                currentLineWidth += currentWordWidth;
+
                 lines.add(new TextLine(currentLine, 0f, currentTop));
                 currentTop += dimensions.newLineHeight;
+                currentLine = new StringBuilder();
+                currentLineWidth = 0f;
                 state = singleLine;
                 state.init(EMPTY_SB, "", 0f);
                 state.processSymbol(c);
@@ -143,6 +150,11 @@ public class TextLines {
 
         @Override
         public void processEndOfString() {
+            if (currentLineWidth + currentWordWidth + previousWordWidth <= width) {
+                currentLine.append(previousWord);
+            } else {
+                previousLine.append(previousWord);
+            }
             currentLine.append(currentWord);
             lines.add(new TextLine(currentLine, 0f, currentTop));
         }

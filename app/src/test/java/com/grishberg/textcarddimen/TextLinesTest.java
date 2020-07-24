@@ -24,17 +24,18 @@ public class TextLinesTest {
 
     @Test
     public void wordWrap() {
-        List<TextLines.TextLine> lines = underTest.calculateTextLines("AAA " + "ABCDEF A" + "AAABCDEF", CARD_WIDTH);
+        List<TextLines.TextLine> lines = underTest.calculateTextLines("AAA " + "ABCDEF A" + "BCDEFABC", CARD_WIDTH);
         result.add(new TextLines.TextLine("AAA", 0f, 0f));
         result.add(new TextLines.TextLine("ABCDEF A", 0f, 0f));
-        result.add(new TextLines.TextLine("AAABCDEF", 0f, 0f));
+        result.add(new TextLines.TextLine("BCDEFABC", 0f, 0f));
         checkLines(result, lines);
     }
 
     @Test
     public void wordWrap2() {
-        List<TextLines.TextLine> lines = underTest.calculateTextLines("ABC ABCDEF", CARD_WIDTH);
-        result.add(new TextLines.TextLine("ABC ABCDEF", 0f, 0f));
+        List<TextLines.TextLine> lines = underTest.calculateTextLines("ABC " +"ABCDEF", CARD_WIDTH);
+        result.add(new TextLines.TextLine("ABC ", 0f, 0f));
+        result.add(new TextLines.TextLine("ABCDEF", 0f, 0f));
         checkLines(result, lines);
     }
 
@@ -56,10 +57,10 @@ public class TextLinesTest {
 
     @Test
     public void wordWrap5() {
-        List<TextLines.TextLine> lines = underTest.calculateTextLines("AAAAA BB" + "CCCCCCC " + "DD", CARD_WIDTH);
-        result.add(new TextLines.TextLine("AAAAA BB", 0f, 0f));
-        result.add(new TextLines.TextLine("CCCCCCC", 0f, 0f));
-        result.add(new TextLines.TextLine("DD", 0f, 0f));
+        List<TextLines.TextLine> lines = underTest.calculateTextLines("AAAAA BC" + "DEFABCD " + "AB", CARD_WIDTH);
+        result.add(new TextLines.TextLine("AAAAA BC", 0f, 0f));
+        result.add(new TextLines.TextLine("DEFABCD", 0f, 0f));
+        result.add(new TextLines.TextLine("AB", 0f, 0f));
         checkLines(result, lines);
     }
 
@@ -72,10 +73,10 @@ public class TextLinesTest {
 
     @Test
     public void wordWrap6() {
-        List<TextLines.TextLine> lines = underTest.calculateTextLines("AAAAA " + "BBBBBBBB" + "! ! !", CARD_WIDTH);
+        List<TextLines.TextLine> lines = underTest.calculateTextLines("AAAAA " + "ABCDEFA!" + " ! !", CARD_WIDTH);
         result.add(new TextLines.TextLine("AAAAA", 0f, 0f));
-        result.add(new TextLines.TextLine("BBBBBBBB", 0f, 0f));
-        result.add(new TextLines.TextLine("! ! !", 0f, 0f));
+        result.add(new TextLines.TextLine("ABCDEFA!", 0f, 0f));
+        result.add(new TextLines.TextLine("! !", 0f, 0f));
         checkLines(result, lines);
     }
 

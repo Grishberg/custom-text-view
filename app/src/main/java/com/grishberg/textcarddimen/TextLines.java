@@ -30,7 +30,7 @@ public class TextLines {
         cachedText = text;
         this.width = width;
         lines.clear();
-        spaceWidth = dimensions.calculateCharSize(' ');
+        spaceWidth = dimensions.calculateCharWidth(' ');
         state = singleLine;
 
         for (int i = 0; i < text.length(); i++) {
@@ -56,7 +56,7 @@ public class TextLines {
 
         @Override
         public void processSymbol(char c) {
-            float charWidth = dimensions.calculateCharSize(c);
+            float charWidth = dimensions.calculateCharWidth(c);
 
             if (isDivider(c)) {
                 currentLine.append(currentWord);
@@ -75,7 +75,7 @@ public class TextLines {
             }
 
             lines.add(new TextLine(currentLine, 0f, currentTop));
-            currentTop += dimensions.newLineHeight;
+            currentTop += dimensions.getFontHeight();
             state = multiLine;
             state.init(currentLine, currentWord.toString(), currentWordWidth);
             currentLine = new StringBuilder();
@@ -110,7 +110,7 @@ public class TextLines {
 
         @Override
         public void processSymbol(char c) {
-            float charWidth = dimensions.calculateCharSize(c);
+            float charWidth = dimensions.calculateCharWidth(c);
             if (isDivider(c)) {
                 if (currentWordWidth + previousWordWidth + currentLineWidth <= width) {
                     // place word before new line to current line.
@@ -138,7 +138,7 @@ public class TextLines {
                 currentLineWidth += currentWordWidth;
 
                 lines.add(new TextLine(currentLine, 0f, currentTop));
-                currentTop += dimensions.newLineHeight;
+                currentTop += dimensions.getFontHeight();
                 currentLine = new StringBuilder();
                 currentLineWidth = 0f;
                 state = singleLine;

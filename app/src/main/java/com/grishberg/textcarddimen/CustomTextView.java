@@ -1,6 +1,7 @@
 package com.grishberg.textcarddimen;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
@@ -9,16 +10,17 @@ import android.view.View;
 
 import com.grishberg.textcarddimen.common.Logger;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class CustomTextView extends View {
     private static final String TAG = CustomTextView.class.getSimpleName();
     private Logger logger = Logger.STUB;
     private final Paint textPaint = new Paint();
     private String text = "";
-    private ArrayList<TextLine> lines = new ArrayList<>();
-    private FontDimensions fontDimensions;
+    private List<TextLines.TextLine> lines = Collections.emptyList();
     private float fontScale;
+    private TextLines textLines;
 
     public CustomTextView(Context context) {
         this(context, null);
@@ -46,7 +48,7 @@ public class CustomTextView extends View {
     }
 
     public void setFontDimensions(FontDimensions fd) {
-        fontDimensions = fd;
+        textLines = new TextLines(fd);
     }
 
     public void setText(String text) {
@@ -66,108 +68,22 @@ public class CustomTextView extends View {
     }
 
     private void prepareLines() {
-        calculateTextSize(text, fontDimensions, 1f, getMeasuredWidth());
+        if (textLines == null) {
+            return;
+        }
+        lines = textLines.calculateTextLines(text, getMeasuredWidth());
     }
 
-    private FontSize calculateTextSize(
-            String text,
-            FontDimensions dimen,
-            float fontScale,
-            int targetWidth) {
-        StringBuilder lastWord = new StringBuilder();
-        StringBuilder currentLine = new StringBuilder();
-        StringBuilder prevWord = new StringBuilder();
-        float currentLineWidth = 0;
-        float h = dimen.topDelta * fontScale;
-        float prevWordWidth = 0f;
-        float lastWordWidth = 0f;
-        float prevH = 0;
-        float charW = 0;
-
-        for (int i = 0; i < text.length(); i++) {
-            char c = text.charAt(i);
-            float charWidth = dimen.calculateCharSize(c);
-            prevH = dimen.height * fontScale;
-            charW = charWidth * fontScale;
-
-            if (isDivider(c)) {
-                if (prevWordWidth + currentLineWidth <= targetWidth) {
-                    currentLineWidth += prevWordWidth;
-                    prevWordWidth = 0;
-                    currentLine = new StringBuilder();
-                    currentLine.append(prevWord);
-                    currentLine.append(lastWord);
-                }
-                lastWordWidth = 0;
-                lastWord = new StringBuilder();
-            }
-
-            if (currentLineWidth + charW > targetWidth) {
-                h += prevH;
-                if (lastWordWidth + prevWordWidth >= targetWidth) {
-                    lastWordWidth = charW;
-                    lastWord = new StringBuilder();
-                    lastWord.append(c);
-
-                    currentLineWidth = charW;
-                    currentLine = new StringBuilder();
-                    currentLine.append(c);
-                    continue;
-                }
-                currentLineWidth = charW;
-                currentLine = new StringBuilder();
-                currentLine.append(c);
-
-                prevWordWidth = lastWordWidth;
-                prevWord = lastWord;
-
-                lastWordWidth = charW;
-                lastWord = new StringBuilder();
-                lastWord.append(c);
-                logger.d(TAG, "new line, w =" + currentLineWidth);
-                continue;
-            }
-            if (prevWordWidth + currentLineWidth + charW > targetWidth) {
-                if (prevWordWidth <= targetWidth) {
-                    prevWordWidth = 0;
-                }
-            }
-            if (!isDivider(c)) {
-                lastWordWidth += charW;
-                lastWord.append(c);
-            }
-            currentLineWidth += charW;
-            currentLine.append(c);
+    @Override
+    protected void onDraw(Canvas canvas) {
+        for (TextLines.TextLine line: lines) {
+            canvas.drawText(line.getText(), line.x, line.y, textPaint);
         }
-        if (prevWordWidth + currentLineWidth > targetWidth) {
-            currentLineWidth = lastWordWidth;
-        }
-        if (prevWordWidth + currentLineWidth < targetWidth) {
-            currentLineWidth = prevWordWidth + currentLineWidth;
-        }
-        h += prevH;
-        return new FontSize(currentLineWidth, h);
-    }
-
-    private boolean isDivider(char c) {
-        return c == ' ';
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         Log.d(TAG, "w=" + w + ", h=" + h);
-    }
-
-    private class TextLine {
-        final String text;
-        final float x;
-        final float y;
-
-        public TextLine(String text, float x, float y) {
-            this.text = text;
-            this.x = x;
-            this.y = y;
-        }
     }
 }

@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="cardTextSize">20dp</dimen>
+    <dimen name="cardTextSize">10dp</dimen>
 </resources>

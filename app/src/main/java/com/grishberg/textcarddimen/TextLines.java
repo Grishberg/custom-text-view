@@ -43,6 +43,10 @@ public class TextLines {
         return lines;
     }
 
+    public void setTextSize(float textSize) {
+        dimensions.setCurrentTextSize(textSize);
+    }
+
     private class SingleLine implements State {
         private StringBuilder previousLine;
         private StringBuilder currentWord = new StringBuilder();

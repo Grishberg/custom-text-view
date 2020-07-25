@@ -74,11 +74,13 @@ public class MainActivity extends Activity {
         fd.save(new File(Environment.getExternalStorageDirectory(), "Download/fontdimension.fdb"));
 
         CustomTextView cardText = findViewById(R.id.cardText);
+        float textSize = getResources().getDimension(R.dimen.cardTextSize);
+        fd.setCurrentTextSize(textSize);
+
         cardText.setFontDimensions(fd);
         cardText.setTypeface(typeface);
-        cardText.setTextSize(getResources().getDimension(R.dimen.cardTextSize));
+        cardText.setTextSize(textSize);
         cardText.setText(getString(R.string.sample));
-
 
         String test = getString(R.string.sample0);
         int targetWidth = getResources().getDimensionPixelSize(R.dimen.cardWidth);

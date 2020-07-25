@@ -24,6 +24,7 @@ public class FontDimensions {
     private float descent;
     private float bottom;
     private float storedFontSize;
+    private float scale = 1f;
 
     public FontDimensions(HashMap<Character, Float> charMap,
                           float top,
@@ -93,16 +94,20 @@ public class FontDimensions {
         }
     }
 
+    public void setCurrentTextSize(float textSize) {
+        scale = storedFontSize / textSize;
+    }
+
     public float getFontHeight() {
-        return descent - ascent;
+        return (descent - ascent) / scale;
     }
 
     public float getTextOffset() {
-        return 0 - top;
+        return (0 - top) / scale;
     }
 
     public float calculateCharWidth(char c) {
-        return charMap.get(c);
+        return charMap.get(c) / scale;
     }
 
     public void save(File file) {

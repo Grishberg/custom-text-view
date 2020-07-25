@@ -42,6 +42,9 @@ public class CustomTextView extends View {
 
     public void setTextSize(float textSize) {
         textPaint.setTextSize(textSize);
+        if (textLines != null) {
+            textLines.setTextSize(textSize);
+        }
     }
 
     public void setTextColor(int textColor) {

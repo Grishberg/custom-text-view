@@ -82,6 +82,7 @@ public class CustomTextView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
         for (TextLines.TextLine line : lines) {
             canvas.drawText(line.getText(), line.x, line.y, textPaint);
         }

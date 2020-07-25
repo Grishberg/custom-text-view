@@ -21,7 +21,7 @@ public class TextLines {
 
     public TextLines(FontDimensions dimensions) {
         this.dimensions = dimensions;
-        currentTop = dimensions.getFontHeight();
+        currentTop = dimensions.getTextOffset();
     }
 
     public List<TextLine> calculateTextLines(String text, int width) {

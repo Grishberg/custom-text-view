@@ -94,7 +94,11 @@ public class FontDimensions {
     }
 
     public float getFontHeight() {
-        return descent - top;
+        return descent - ascent;
+    }
+
+    public float getTextOffset() {
+        return 0 - top;
     }
 
     public float calculateCharWidth(char c) {

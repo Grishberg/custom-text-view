@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -32,7 +33,7 @@ public class CustomTextView extends View {
 
     public CustomTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        textPaint.setColor(Color.BLACK);
+        textPaint.setColor(Color.WHITE);
     }
 
     public void setLogger(Logger logger) {
@@ -49,6 +50,11 @@ public class CustomTextView extends View {
 
     public void setFontDimensions(FontDimensions fd) {
         textLines = new TextLines(fd);
+        setText(text);
+    }
+
+    public void setTypeface(Typeface tf) {
+        textPaint.setTypeface(tf);
     }
 
     public void setText(String text) {
@@ -61,7 +67,7 @@ public class CustomTextView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        if (!text.isEmpty()) {
+        if (text.isEmpty()) {
             return;
         }
         prepareLines();
@@ -76,7 +82,7 @@ public class CustomTextView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        for (TextLines.TextLine line: lines) {
+        for (TextLines.TextLine line : lines) {
             canvas.drawText(line.getText(), line.x, line.y, textPaint);
         }
     }

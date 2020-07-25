@@ -21,6 +21,7 @@ public class TextLines {
 
     public TextLines(FontDimensions dimensions) {
         this.dimensions = dimensions;
+        currentTop = dimensions.getFontHeight();
     }
 
     public List<TextLine> calculateTextLines(String text, int width) {
@@ -74,8 +75,7 @@ public class TextLines {
                 return;
             }
 
-            lines.add(new TextLine(currentLine, 0f, currentTop));
-            currentTop += dimensions.getFontHeight();
+            addLine();
             state = multiLine;
             state.init(currentLine, currentWord.toString(), currentWordWidth);
             currentLine = new StringBuilder();
@@ -87,7 +87,7 @@ public class TextLines {
         @Override
         public void processEndOfString() {
             currentLine.append(currentWord);
-            lines.add(new TextLine(currentLine, 0f, currentTop));
+            addLine();
         }
     }
 
@@ -137,8 +137,7 @@ public class TextLines {
                 currentLine.append(currentWord);
                 currentLineWidth += currentWordWidth;
 
-                lines.add(new TextLine(currentLine, 0f, currentTop));
-                currentTop += dimensions.getFontHeight();
+                addLine();
                 currentLine = new StringBuilder();
                 currentLineWidth = 0f;
                 state = singleLine;
@@ -156,8 +155,16 @@ public class TextLines {
                 previousLine.append(previousWord);
             }
             currentLine.append(currentWord);
-            lines.add(new TextLine(currentLine, 0f, currentTop));
+            addLine();
         }
+    }
+
+    private void addLine() {
+        if (currentLine.toString().trim().isEmpty()) {
+            return;
+        }
+        lines.add(new TextLine(currentLine, 0f, currentTop));
+        currentTop += dimensions.getFontHeight();
     }
 
     private boolean isDivider(char c) {

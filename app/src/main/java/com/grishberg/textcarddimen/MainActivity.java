@@ -3,7 +3,6 @@ package com.grishberg.textcarddimen;
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -12,12 +11,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextPaint;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
-
-import com.grishberg.textcarddimen.common.LogcatLogger;
 
 import java.io.File;
 import java.util.HashMap;
@@ -29,14 +24,18 @@ public class MainActivity extends Activity {
     private static final int REQUEST_PERMISSION = 1234;
 
     private static final String FONT = "fonts/NewCMSans10-Regular.otf";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                && !hasPermission()) {
+            ActivityCompat.requestPermissions(this, new String[]{
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    },
                     REQUEST_PERMISSION);
             return;
         }
@@ -44,6 +43,10 @@ public class MainActivity extends Activity {
         doWork();
     }
 
+    private boolean hasPermission() {
+        return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    }
 
     @Override
     public void onRequestPermissionsResult(final int requestCode, final String[] permissions, final int[] grantResults) {
@@ -66,12 +69,17 @@ public class MainActivity extends Activity {
         TextView scaledTextView = findViewById(R.id.scaledTextView);
         scaledTextView.setTypeface(typeface);
 
-        TextView cardText = findViewById(R.id.cardText);
-        cardText.setTypeface(typeface);
-
         FontDimensions fd = getTextMetrics(getString(R.string.abc), textView);
         //FontDimensions fd = new FontDimensions(getAssets().open("fontdimension.fdb"));
-        fd.save(new File( Environment.getExternalStorageDirectory(), "Download/fontdimension.fdb"));
+        fd.save(new File(Environment.getExternalStorageDirectory(), "Download/fontdimension.fdb"));
+
+        CustomTextView cardText = findViewById(R.id.cardText);
+        cardText.setFontDimensions(fd);
+        cardText.setTypeface(typeface);
+        cardText.setTextSize(getResources().getDimension(R.dimen.cardTextSize));
+        cardText.setText(getString(R.string.sample));
+
+
         String test = getString(R.string.sample0);
         int targetWidth = getResources().getDimensionPixelSize(R.dimen.cardWidth);
         float scale = android.provider.Settings.System.getFloat(getContentResolver(),
@@ -79,7 +87,7 @@ public class MainActivity extends Activity {
 
         float fontScale = getResources().getConfiguration().fontScale;
 
-        cardText.setText(test);
+        //cardText.setText(test);
 
         ViewGroup content = findViewById(R.id.mainFrameLayout);
     }
@@ -104,7 +112,9 @@ public class MainActivity extends Activity {
             charMap.put(c, measuredWidth);
         }
         float height = roundAvoid(fm.descent - fm.ascent, 3);
-        return new FontDimensions(charMap, height, paint.getTextSize());
+        return new FontDimensions(charMap,
+                fm.top, fm.ascent, fm.descent, fm.bottom,
+                paint.getTextSize());
     }
 
     private float calculateLeading(TextView textView, TextView scaledTextView) {

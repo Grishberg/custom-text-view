@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="cardTextSize">10dp</dimen>
+    <dimen name="cardTextSize">16dp</dimen>
+    <dimen name="cardTextSizeInSp">16sp</dimen>
 </resources>
